@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Post extends Model
 {
@@ -27,8 +26,11 @@ class Post extends Model
         'title',
         'slug',
         'content',
+        'thumbnail',
+        'category_id',
+        'tags',
+        'is_published',
         'user_id',
-        'tag_id',
     ];
 
     /**
@@ -38,8 +40,8 @@ class Post extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'tags' => 'array',
         'user_id' => 'integer',
-        'tag_id' => 'integer',
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',
     ];
@@ -54,10 +56,11 @@ class Post extends Model
         return $this->belongsTo(Tag::class);
     }
 
-    public function tags(): HasMany
+    public function tags()
     {
-        return $this->hasMany(Tag::class);
+        return $this->belongsToMany(Tag::class);
     }
+
 
     public function category(): BelongsTo
     {

@@ -2,9 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Tag;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TagFactory extends Factory
 {
@@ -20,8 +19,10 @@ class TagFactory extends Factory
      */
     public function definition(): array
     {
+        $faker = \Faker\Factory::create();
+        $faker->addProvider(new \Bezhanov\Faker\Provider\Commerce($faker));
         return [
-            'tag_name' => $this->faker->regexify('[A-Za-z0-9]{100}'),
+            'tag_name' => strtolower($faker->unique()->department()),
             'created_at' => $this->faker->dateTime(),
             'updated_at' => $this->faker->dateTime(),
         ];

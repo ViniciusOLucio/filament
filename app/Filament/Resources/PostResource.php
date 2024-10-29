@@ -5,11 +5,19 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
 use App\Models\Post;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
+
 
 class PostResource extends Resource
 {
@@ -22,7 +30,79 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Section::make('Post information')
+                    ->description('Informações do post')
+                    ->schema([
+                        TextInput::make('title')
+                            ->hint('Titulo do post')
+                            ->label('Titulo')
+                            ->placeholder('Titulo do post')
+                            ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function ($state, $set) {
+                                $set('slug', Str::slug($state));
+                            }),
+
+                        TextInput::make('slug')
+                            ->hint('Slug do post')
+                            ->label('Slug')
+                            ->placeholder('Slug do post')
+                            ->required(),
+                    ])->columns(2),
+
+                Section::make('Conteudo')
+                    ->description('Conteudo do post')
+                    ->schema([
+                        RichEditor::make('content')
+                            ->helperText('Conteudo do post')
+                            ->label('Conteudo do post')
+                            ->required()
+
+                    ])->columnSpanFull(),
+                Section::make('Post  Thumb')
+                    ->description('Thumbail do post')
+                    ->schema([
+                        FileUpload::make('thumbnail')
+                            ->image()
+                            ->helperText('Thumbail do post')
+                            ->label('Thumbail do post')
+                            ->directory('thumbs')
+                            ->required(),
+                    ])->columnSpanFull(),
+
+                Section::make('Categorias e tags')
+                    ->description('Escolha as categorias e tags')
+                    ->schema([
+                        Select::make('category_id')
+                            ->label('categoria')
+                            ->searchable()
+                            ->options(
+                                \App\Models\Category::all()->pluck('name', 'id')
+                            ),
+
+                        TagsInput::make('tags')
+                            ->label('tags')
+                        
+//                        Select::make('tags')
+//                            ->nullable()
+//                            ->label('Tags')
+//                            ->searchable()
+//                            ->preload()
+//                            ->multiple()
+//                            ->relationship('tags', 'tag_name')
+
+                    ])->columns(2),
+
+                Section::make('Publicado')
+                    ->schema([
+                        Select::make('is_published')
+                            ->options([
+                                0 => 'Não',
+                                1 => 'Sim'
+                            ])
+                            ->label('Publicado')
+                            ->required()
+                    ])
             ]);
     }
 
