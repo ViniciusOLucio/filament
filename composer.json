@@ -9,7 +9,8 @@
         "filament/filament": "^3.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "mbezhanov/faker-provider-collection": "^2.0"
+        "mbezhanov/faker-provider-collection": "^2.0",
+        "spatie/laravel-permission": "^6.9"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.1",

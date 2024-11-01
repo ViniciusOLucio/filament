@@ -17,6 +17,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use function Laravel\Prompts\text;
 
 
 class PostResource extends Resource
@@ -82,7 +83,7 @@ class PostResource extends Resource
 
                         TagsInput::make('tags')
                             ->label('tags')
-                        
+
 //                        Select::make('tags')
 //                            ->nullable()
 //                            ->label('Tags')
@@ -113,8 +114,18 @@ class PostResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->label('Titulo')
                     ->searchable()
-                    ->sortable()
-                    ->limit(15),
+                    ->wrap()
+                    ->description(function (Post $record) {
+                        return $record->category ? $record->category->name : 'Sem Categoria'; // Verifica se a categoria existe
+                    })
+                    ->sortable(),
+//                TextColumn::make('category.name')
+//                    ->label('Categoria')
+//                    ->sortable()
+//                    ->searchable(),
+
+            TextColumn::make('tags.tag_name')
+                ->label('tags'),
 
                 Tables\Columns\IconColumn::make('is_published')
                     ->sortable()
@@ -126,10 +137,6 @@ class PostResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                TextColumn::make('category.name')
-                    ->label('Categoria')
-                    ->sortable()
-                    ->searchable(),
             ])
             ->filters([
                 //

@@ -14,5 +14,8 @@
         "postcss": "^8.4.31",
         "tailwindcss": "^3.4.12",
         "vite": "^5.0"
+    },
+    "dependencies": {
+        "@ryangjchandler/alpine-tooltip": "^2.0.1"
     }
 }

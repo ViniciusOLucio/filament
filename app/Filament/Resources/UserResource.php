@@ -122,13 +122,16 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+
+                ImageColumn::make('avatar')
+                    ->circular(),
+                Tables\Columns\TextInputColumn::make('name')
+
                     ->label('Nome')
                     ->sortable()
                     ->searchable(),
 
-                ImageColumn::make('avatar')
-                    ->circular(),
+
 
                 Tables\Columns\TextColumn::make('email')
                     ->label('E-Mail')
@@ -141,13 +144,20 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
 
-                Tables\Columns\IconColumn::make('is_admin')
-                    ->boolean()
+                Tables\Columns\ToggleColumn::make('is_admin')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Administrador'),
 
                 Tables\Columns\TextColumn::make('comments_count')
                     ->label('Comentários')
+                    ->badge()
+                    ->color(function($state):string {
+                        if ($state >= 2) {
+                          return 'success' ;
+                        }else{
+                            return 'danger' ;
+                        }
+                    })
                     ->sortable()
                     ->counts('comments'),
 
