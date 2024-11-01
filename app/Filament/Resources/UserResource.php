@@ -124,21 +124,24 @@ class UserResource extends Resource
             ->columns([
 
                 ImageColumn::make('avatar')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->circular(),
                 Tables\Columns\TextInputColumn::make('name')
 
                     ->label('Nome')
                     ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
 
 
 
-                Tables\Columns\TextColumn::make('email')
+                Tables\Columns\TextInputColumn::make('email')
                     ->label('E-Mail')
                     ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('phone')
+                Tables\Columns\TextInputColumn::make('phone')
                     ->label('Telefone')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -151,6 +154,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('comments_count')
                     ->label('Comentários')
                     ->badge()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->color(function($state):string {
                         if ($state >= 2) {
                           return 'success' ;
