@@ -1,13 +1,19 @@
 <?php
 
+// Em app/Providers/Filament/AdminPanelProvider.php
+
 namespace App\Providers\Filament;
 
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
+use Filament\Facades\Filament;
+use Filament\Navigation\NavigationGroup;
+use Illuminate\Support\ServiceProvider;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentView;
@@ -37,7 +43,7 @@ class AdminPanelProvider extends PanelProvider
             ->defaultThemeMode(ThemeMode::Dark)
             ->brandName('Freitas Bueno')
             ->colors([
-                'primary' => Color::Orange ,
+                'primary' => Color::Orange,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -69,5 +75,23 @@ class AdminPanelProvider extends PanelProvider
     {
         parent::register();
         FilamentView::registerRenderHook('panels::body.end', fn(): string => Blade::render("@vite('resources/js/app.js')"));
+    }
+
+    public function boot(): void
+    {
+        Filament::serving(function () {
+            Filament::registerNavigationGroups([
+                NavigationGroup::make()
+                    ->label('Posts')
+                    ->icon('heroicon-s-pencil'),
+                NavigationGroup::make()
+                    ->label('Settings')
+                    ->icon('heroicon-s-cog')
+                    ->collapsed(),
+
+            ]);
+
+
+        });
     }
 }
