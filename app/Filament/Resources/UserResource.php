@@ -15,7 +15,10 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use PhpParser\Node\Expr\Ternary;
 
 // Ajustado para o caminho correto
 
@@ -129,6 +132,10 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->filtersTriggerAction(function ($action){
+                return $action->button()->label('Filtrar');
+            })
+            ->filtersFormWidth('lg')
             ->columns([
 
                 ImageColumn::make('avatar')
@@ -162,6 +169,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('comments_count')
                     ->label('Comentários')
                     ->badge()
+                    ->icon('heroicon-o-chat-bubble-bottom-center-text')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->color(function($state):string {
                         if ($state >= 2) {
@@ -185,8 +193,15 @@ class UserResource extends Resource
 
             ])
             ->filters([
+
+
+                SelectFilter::make('id')
+                    ->label('Usuários')
+                    ->multiple()
+                    ->searchable()
+                ->options(User::pluck('name', 'id'))
                 //
-            ])
+            ], layout: Tables\Enums\FiltersLayout::Dropdown)
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make()->color('primary'),
